@@ -5,4 +5,8 @@
   This is a message board for learning Flask
   <a href="{{ url_for('pages.home') }}">Home page</a>
 </p>
-{% endblock content%}
+{% if g.user %}
+<div class="message">
+  <p>Welcome {{ g.user['username'] }}</p>
+</div>
+{% endif %} {% endblock content%}

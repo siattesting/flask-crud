@@ -1,11 +1,38 @@
 {% extends 'base.html' %} {% block header %}
 <h2>{% block title%}Posts{% endblock title %}</h2>
-{% endblock %} {% block content %} {% for post in posts %}
-<article>
-  <p class="message">{{ post['message'] }}</p>
-  <aside>
-    Posted by {{ post['author'] }} on {{ post['created'].strftime("%b %d, %Y at
-    %I:%M%p") }}
-  </aside>
-</article>
-{% endfor %} {% endblock content %}
+<span>{{ g.user['username'] }}</span>
+{% endblock %} {% block content %}
+<form>
+  <div class="form-group">
+    <input
+      type="text"
+      name="search"
+      hx-post="/search"
+      hx-trigger="keyup changed delay:250ms"
+      hx-indicator="htmx-indicator"
+      hx-target="#posts-results"
+      placeholder="Search posts"
+      class="form-control"
+    />
+  </div>
+</form>
+<section id="posts-results">
+  {% for post in posts %}
+
+  <article id="posts-results">
+    <p class="message">{{ post['message'] }}</p>
+    {% if g.user['username'] == post['username'] %}
+    <a class="submit-btn" href="{{ url_for('posts.update', id=post['id']) }}"
+      >Edit Message</a
+    >
+    {% endif %}
+    <aside>
+      Posted by {{ post['username'] }} on {{ post['created_at'].strftime("%b %d,
+      %Y at %I:%M%p") }}
+    </aside>
+  </article>
+  {% if not loop.last %}
+  <hr />
+  {% endif %} {% endfor %}
+</section>
+{% endblock content %}

@@ -1,0 +1,45 @@
+{% extends 'base.html' %} {% block header %}
+<h2>{% block title %}Edit Post{% endblock title %}</h2>
+{% endblock header %} {% block content %}
+<form action="" method="post">
+  <div class="form-group">
+    <label for="author">Author:</label>
+    <input
+      type="text"
+      class="form-control"
+      name="author"
+      id="author"
+      value="{{ g.user['username'] }}"
+      disabled
+    />
+    <!-- <p>{{ g.user['username'] }}</p> -->
+  </div>
+  <div class="form-group">
+    <label for="message">Your message:</label>
+    <textarea
+      class="form-control"
+      name="message"
+      id="message"
+      required
+      autofocus
+    >
+{{ request.form['message'] or post['message'] }}</textarea
+    >
+  </div>
+  <div class="form-group">
+    <input type="submit" class="submit-btn" value="Update your message" />
+  </div>
+</form>
+
+<form action="{{ url_for('posts.delete', id=post['id']) }}" method="post">
+  <div-form-group>
+    <input
+      class="delete-btn"
+      type="submit"
+      value="Delete"
+      onclick="return confirm('Are you sure?');"
+    />
+  </div-form-group>
+</form>
+<hr />
+{% endblock content %}

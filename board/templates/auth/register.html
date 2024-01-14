@@ -1,0 +1,48 @@
+{% extends 'base.html' %} {% block header %}
+<h1>{% block title %}Register{% endblock title%}</h1>
+{% endblock header %} {% block content %}
+<form action="" method="post">
+  <div class="form-group">
+    <label for="username">Username:</label>
+    <input
+      type="email"
+      class="form-control"
+      name="username"
+      id="username"
+      placeholder="username@example.com"
+      required
+      value="{{ request.form ['username'] }}"
+    />
+  </div>
+  <div class="form-group">
+    <label for="password">Password:</label>
+    <input
+      type="password"
+      class="form-control"
+      name="password"
+      id="password"
+      required
+      value="{{ request.form ['password'] }}"
+    />
+  </div>
+  <div class="form-group">
+    <label for="passwordconfirmation">Confirm Password:</label>
+    <input
+      type="password"
+      class="form-control"
+      name="passwordconfirmation"
+      id="passwordconfirmation"
+      required
+      value="{{ request.form ['passwordconfirmation'] }}"
+    />
+  </div>
+
+  <div class="form-group">
+    <input type="submit" class="submit-btn" value="Register" />
+  </div>
+</form>
+
+<div>
+  <p>Already registered ? <a href="{{ url_for('auth.login') }}">Log In</a></p>
+</div>
+{% endblock content %}

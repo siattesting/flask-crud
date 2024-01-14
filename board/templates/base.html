@@ -8,11 +8,17 @@
       rel="stylesheet"
       href="{{ url_for('static', filename='styles.css') }}"
     />
+    <script src="{{ url_for('static', filename='htmx.min.js') }}"></script>
   </head>
   <body>
     <h1>Message Board</h1>
     {% include('_navigation.html') %}
     <header>{% block header %}{% endblock header %}</header>
+    <!---->
+    {% for message in get_flashed_messages() %}
+    <div class="flash">{{ message }}</div>
+    {% endfor %}
+    <!---->
     <section>
       <main>
         {% block content %}
@@ -20,5 +26,6 @@
         {% endblock content %}
       </main>
     </section>
+    <!---->
   </body>
 </html>

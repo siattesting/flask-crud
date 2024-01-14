@@ -3,6 +3,12 @@
     <li><a href="{{ url_for('pages.home') }}">Home</a></li>
     <li><a href="{{ url_for('pages.about') }}">About</a></li>
     <li><a href="{{ url_for('posts.posts') }}">Posts</a></li>
+    {% if g.user %}
     <li><a href="{{ url_for('posts.create') }}">Add Post</a></li>
+    <li><a href="{{ url_for('auth.logout') }}">Log out</a></li>
+    {% else %}
+    <li><a href="{{ url_for('auth.login') }}">Log In</a></li>
+    <li><a href="{{ url_for('auth.register') }}">Register</a></li>
+    {% endif %}
   </ul>
 </nav>

@@ -1,0 +1,38 @@
+{% extends 'base.html' %} {% block header %}
+<h1>{% block title %}Log In{% endblock title%}</h1>
+{% endblock header %} {% block content %}
+<form action="" method="post">
+  <div class="form-group">
+    <label for="username">Username:</label>
+    <input
+      type="email"
+      class="form-control"
+      name="username"
+      id="username"
+      placeholder="username@example.com"
+      required
+      value="{{ request.form ['username'] }}"
+    />
+  </div>
+  <div class="form-group">
+    <label for="password">Password:</label>
+    <input
+      type="password"
+      class="form-control"
+      name="password"
+      id="password"
+      required
+      value="{{ request.form ['password'] }}"
+    />
+  </div>
+
+  <div class="form-group">
+    <input type="submit" class="submit-btn" value="Login" />
+  </div>
+</form>
+<div>
+  <p>
+    Not yet registered ? <a href="{{ url_for('auth.register') }}">Sign Up</a>
+  </p>
+</div>
+{% endblock content %}
