@@ -22,7 +22,9 @@
   <article id="posts-results">
     <p class="message">{{ post['message'] }}</p>
     {% if g.user['username'] == post['username'] %}
-    <a class="submit-btn" href="{{ url_for('posts.update', id=post['id']) }}"
+    <a
+      class="submit-btn"
+      href="{{ url_for('posts.update', postID=post['postID']) }}"
       >Edit Message</a
     >
     {% endif %}

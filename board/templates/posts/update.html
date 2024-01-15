@@ -31,7 +31,10 @@
   </div>
 </form>
 
-<form action="{{ url_for('posts.delete', id=post['id']) }}" method="post">
+<form
+  action="{{ url_for('posts.delete', postID=post['postID']) }}"
+  method="post"
+>
   <div-form-group>
     <input
       class="delete-btn"

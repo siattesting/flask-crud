@@ -7,6 +7,6 @@
 </p>
 {% if g.user %}
 <div class="message">
-  <p>Welcome {{ g.user['username'] }}</p>
+  <p>Welcome {{ g.user['username'] }} - {{ g.user['userID'] }}</p>
 </div>
 {% endif %} {% endblock content%}

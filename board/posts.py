@@ -3,6 +3,8 @@ from flask import Blueprint, flash, g, render_template, redirect, request, url_f
 # the following line comes from the offical from flask tutorial
 from werkzeug.exceptions import abort
 
+from nanoid import generate
+
 # To Enforce login required on some view import the following from the auth blueprint
 from board.auth import login_required
 
@@ -16,8 +18,9 @@ bp = Blueprint("posts", __name__)
 @login_required
 def create():
     if request.method == "POST":
-        author = g.user["id"]
+        author = g.user["userID"]
         message = request.form["message"]
+        postID = generate()
         error = None
 
         if not message:
@@ -28,8 +31,8 @@ def create():
         else:
             db = get_db()
             db.execute(
-                "INSERT INTO posts (message, author) VALUES(?, ?)",
-                (message, g.user["id"]),
+                "INSERT INTO posts (message, author, postId) VALUES(?, ?, ?)",
+                (message, g.user["userID"], postID),
             )
             db.commit()
             return redirect(url_for("posts.posts"))
@@ -41,7 +44,7 @@ def posts():
     db = get_db()
     posts = db.execute(
         "SELECT *"
-        " FROM posts p JOIN users u ON p.author = u.id"
+        " FROM posts p JOIN users u ON p.author = u.userID"
         " ORDER BY created_at DESC"
     ).fetchall()
     return render_template("posts/posts.html", posts=posts)
@@ -54,7 +57,7 @@ def get_post(id):
     post = (
         get_db()
         .execute(
-            "SELECT p.id, message, p.created_at, author FROM posts p JOIN users u ON p.author = u.id WHERE p.id = ?",
+            "SELECT p.postID, message, p.created_at, author FROM posts p JOIN users u ON p.author = u.userID WHERE p.postID = ?",
             (id,),
         )
         .fetchone()
@@ -69,10 +72,10 @@ def get_post(id):
     return post
 
 
-@bp.route("/<int:id>/update", methods=("GET", "POST"))
+@bp.route("/<postID>/update", methods=("GET", "POST"))
 @login_required
-def update(id):
-    post = get_post(id)
+def update(postID):
+    post = get_post(postID)
 
     if request.method == "POST":
         message = request.form["message"]
@@ -85,19 +88,21 @@ def update(id):
             flash(error)
         else:
             db = get_db()
-            db.execute("UPDATE posts SET message = ?" " WHERE id = ?", (message, id))
+            db.execute(
+                "UPDATE posts SET message = ?" " WHERE postID = ?", (message, postID)
+            )
             db.commit()
             return redirect(url_for("posts.posts"))
 
     return render_template("posts/update.html", post=post)
 
 
-@bp.route("/<int:id>/delete", methods=("POST",))
+@bp.route("/<postID>/delete", methods=("POST",))
 @login_required
-def delete(id):
-    get_post(id)
+def delete(postID):
+    get_post(postID)
     db = get_db()
-    db.execute("DELETE FROM posts WHERE id = ?", (id,))
+    db.execute("DELETE FROM posts WHERE postID = ?", (postID,))
     db.commit()
     return redirect(url_for("posts.posts"))
 
