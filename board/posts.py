@@ -35,6 +35,7 @@ def create():
                 (message, g.user["userID"], postID),
             )
             db.commit()
+
             return redirect(url_for("posts.posts"))
     return render_template("posts/create.html")
 
@@ -47,6 +48,7 @@ def posts():
         " FROM posts p JOIN users u ON p.author = u.userID"
         " ORDER BY created_at DESC"
     ).fetchall()
+
     return render_template("posts/posts.html", posts=posts)
 
 
@@ -92,6 +94,7 @@ def update(postID):
                 "UPDATE posts SET message = ?" " WHERE postID = ?", (message, postID)
             )
             db.commit()
+
             return redirect(url_for("posts.posts"))
 
     return render_template("posts/update.html", post=post)
@@ -104,6 +107,7 @@ def delete(postID):
     db = get_db()
     db.execute("DELETE FROM posts WHERE postID = ?", (postID,))
     db.commit()
+
     return redirect(url_for("posts.posts"))
 
 

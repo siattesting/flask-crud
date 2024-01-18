@@ -1,0 +1,40 @@
+{% extends 'base.html' %} {% block header %}
+<h2>{% block title%}Customers{% endblock title %}</h2>
+<span>{{ g.user['username'] }}</span>
+{% endblock %} {% block content %}
+<form>
+  <div class="form-group">
+    <input
+      type="text"
+      name="search"
+      hx-post="/search"
+      hx-trigger="keyup changed delay:250ms"
+      hx-indicator="htmx-indicator"
+      hx-target="#customers-results"
+      placeholder="Search Customers"
+      class="form-control"
+    />
+  </div>
+</form>
+<section id="customers-results">
+  {% for customer in customers %}
+
+  <article id="customers-results">
+    <p class="message">{{ customer['message'] }}</p>
+    {% if g.user['username'] == customer['username'] %}
+    <a
+      class="submit-btn"
+      href="{{ url_for('customers.update', customerID=customer['customerID']) }}"
+      >Edit Message</a
+    >
+    {% endif %}
+    <aside>
+      Created by {{ customer['username'] }} on {{
+      customer['created_at'].strftime("%b %d, %Y at %I:%M%p") }}
+    </aside>
+  </article>
+  {% if not loop.last %}
+  <hr />
+  {% endif %} {% endfor %}
+</section>
+{% endblock content %}

@@ -25,7 +25,7 @@ CREATE TABLE comments (
     message TEXT NOT NULL,
     author TEXT NOT NULL REFERENCES users(userID),
     post TEXT NOT NULL REFERENCES posts(postID)
-)
+);
 -- Either:
 --     Open DB Browser for SQLite.
 --     Create a new database named Northwind.db.
@@ -50,7 +50,9 @@ CREATE TABLE Categories
 (      
     CategoryID INTEGER PRIMARY KEY AUTOINCREMENT,
     CategoryName TEXT,
-    Description TEXT
+    Description TEXT,
+    author TEXT NOT NULL REFERENCES users(userID) DEFAULT 'admin@me.com',
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE Customers
@@ -61,7 +63,9 @@ CREATE TABLE Customers
     Address TEXT,
     City TEXT,
     PostalCode TEXT,
-    Country TEXT
+    Country TEXT,
+    author TEXT NOT NULL REFERENCES users(userID) DEFAULT 'admin@me.com',
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE Employees
@@ -71,13 +75,17 @@ CREATE TABLE Employees
     FirstName TEXT,
     BirthDate DATE,
     Photo TEXT,
-    Notes TEXT
+    Notes TEXT,
+    author TEXT NOT NULL REFERENCES users(userID) DEFAULT 'admin@me.com',
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE Shippers(
     ShipperID INTEGER PRIMARY KEY AUTOINCREMENT,
     ShipperName TEXT,
-    Phone TEXT
+    Phone TEXT,
+    author TEXT NOT NULL REFERENCES users(userID) DEFAULT 'admin@me.com',
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE Suppliers(
@@ -88,7 +96,9 @@ CREATE TABLE Suppliers(
     City TEXT,
     PostalCode TEXT,
     Country TEXT,
-    Phone TEXT
+    Phone TEXT,
+    author TEXT NOT NULL REFERENCES users(userID) DEFAULT 'admin@me.com',
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE Products(
@@ -99,7 +109,9 @@ CREATE TABLE Products(
     Unit TEXT,
     Price NUMERIC DEFAULT 0,
 	FOREIGN KEY (CategoryID) REFERENCES Categories (CategoryID),
-	FOREIGN KEY (SupplierID) REFERENCES Suppliers (SupplierID)
+	FOREIGN KEY (SupplierID) REFERENCES Suppliers (SupplierID),
+    author TEXT NOT NULL REFERENCES users(userID) DEFAULT 'admin@me.com',
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE Orders(
@@ -110,7 +122,9 @@ CREATE TABLE Orders(
     ShipperID INTEGER,
     FOREIGN KEY (EmployeeID) REFERENCES Employees (EmployeeID),
     FOREIGN KEY (CustomerID) REFERENCES Customers (CustomerID),
-    FOREIGN KEY (ShipperID) REFERENCES Shippers (ShipperID)
+    FOREIGN KEY (ShipperID) REFERENCES Shippers (ShipperID),
+    author TEXT NOT NULL REFERENCES users(userID) DEFAULT 'admin@me.com',
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE OrderDetails(
