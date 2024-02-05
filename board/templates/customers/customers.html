@@ -2,7 +2,7 @@
 <h2>{% block title%}Customers{% endblock title %}</h2>
 <span>{{ g.user['username'] }}</span>
 {% endblock %} {% block content %}
-<form>
+<!-- <form>
   <div class="form-group">
     <input
       type="text"
@@ -15,23 +15,25 @@
       class="form-control"
     />
   </div>
-</form>
+</form> -->
 <section id="customers-results">
   {% for customer in customers %}
 
   <article id="customers-results">
-    <p class="message">{{ customer['message'] }}</p>
-    {% if g.user['username'] == customer['username'] %}
+    <p class="message">{{ customer['CustomerName'] }}</p>
+    <p>{{ customer['Address'] }}</p>
+    <p>{{ customer['PostalCode'] }}</p>
+    <p>{{ customer['City'] }}</p>
+    <p>{{ customer['Country'] }}</p>
+    <small>{{ customer['author'] }}</small>
+    {% if g.user['userID'] == customer['author'] %}
     <a
       class="submit-btn"
       href="{{ url_for('customers.update', customerID=customer['customerID']) }}"
       >Edit Message</a
     >
     {% endif %}
-    <aside>
-      Created by {{ customer['username'] }} on {{
-      customer['created_at'].strftime("%b %d, %Y at %I:%M%p") }}
-    </aside>
+    <aside></aside>
   </article>
   {% if not loop.last %}
   <hr />

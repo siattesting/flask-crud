@@ -31,7 +31,7 @@ def create():
         else:
             db = get_db()
             db.execute(
-                "INSERT INTO customers (address, created_by, customerID) VALUES(?, ?, ?)",
+                "INSERT INTO customers (address, author, customerID) VALUES(?, ?, ?)",
                 (address, g.user["userID"], customerID),
             )
             db.commit()
@@ -43,9 +43,8 @@ def create():
 def customers():
     db = get_db()
     customers = db.execute(
-        "SELECT *"
-        " FROM customers c JOIN users u ON c.created_by = u.userID"
-        " ORDER BY created_at DESC"
+        "SELECT c.customerID, c.Customername,  c.address, c.city, c.PostalCode, c.country, c.created_at, c.author FROM customers c JOIN users u ON c.author = u.userID"
+        " ORDER BY CustomerName ASC"
     ).fetchall()
     return render_template("customers/customers.html", customers=customers)
 
@@ -53,11 +52,11 @@ def customers():
 # Both the update and delete views will need to fetch a customer by id
 # and check if the author matches the logged in user.
 # To avoid duplicating code, you can write a function to get the customer and call it from each view.
-def get_post(id):
+def get_customer(id):
     customer = (
         get_db()
         .execute(
-            "SELECT c.customerID, address, c.created_at, c.created_by FROM customers c JOIN users u ON c.created_by = u.userID WHERE c.customerID = ?",
+            "SELECT c.customerID, c.address, c.city, c.country, c.PostalCode, c.created_at, c.created_by FROM customers c JOIN users u ON c.author = u.userID WHERE c.customerID = ?",
             (id,),
         )
         .fetchone()
@@ -115,7 +114,7 @@ def search_posts():
     if not len(search_term):
         return render_template("customers/customers.html", customers=[])
 
-    res_posts = []
+    res_customers = []
     db = get_db()
     customers = db.execute(
         "SELECT * FROM customers ORDER BY created_at DESC"
@@ -123,6 +122,6 @@ def search_posts():
 
     for customer in customers:
         if search_term in customer["address"]:
-            res_posts.append(customer)
+            res_customers.append(customer)
 
-    return render_template("customers/customers.html", customers=res_posts)
+    return render_template("customers/customers.html", customers=res_customers)

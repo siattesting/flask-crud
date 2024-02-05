@@ -13,7 +13,11 @@
   <body>
     <h1>Message Board</h1>
     {% include('_navigation.html') %}
-    <header>{% block header %}{% endblock header %}</header>
+    <header>
+      {% block header %}{% endblock header %}
+      <div class="flash success">Everything worked</div>
+      <div class="flash error">Oh no! something went wrong.</div>
+    </header>
     <!---->
     {% for message in get_flashed_messages() %}
     <div class="flash">{{ message }}</div>
