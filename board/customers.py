@@ -18,21 +18,45 @@ bp = Blueprint("customers", __name__)
 @login_required
 def create():
     if request.method == "POST":
-        created_by = g.user["userID"]
-        address = request.form["address"]
+        author = g.user["userID"]
+        CustomerName = request.form["CustomerName"]
+        ContactName = request.form["ContactName"]
+        Address = request.form["Addres"]
+        City = request.form["City"]
+        PostalCode = request.form["PostalCode"]
+        Country = request.form["Country"]
         customerID = generate()
         error = None
 
-        if not address:
-            error = "address is required"
+        if not CustomerName:
+            error = "Customer Name is required"
+        if not ContactName:
+            error = "Contact Name is required"
+        if not Address:
+            error = "Address is required"
+        if not City:
+            error = "City is required"
+        if not PostalCode:
+            error = "Postal Code is required"
+        if not Country:
+            error = "Country is required"
 
         if error is not None:
             flash(error)
         else:
             db = get_db()
             db.execute(
-                "INSERT INTO customers (address, author, customerID) VALUES(?, ?, ?)",
-                (address, g.user["userID"], customerID),
+                "INSERT INTO Customers (CustomerID, CustomerName, ContactName, Address, City, PostalCode, Country, author) VALUES(?, ?, ?, ?, ?, ?, ?, ?)",
+                (
+                    customerID,
+                    CustomerName,
+                    ContactName,
+                    Address,
+                    City,
+                    PostalCode,
+                    Country,
+                    g.user["userID"],
+                ),
             )
             db.commit()
             return redirect(url_for("customers.customers"))
@@ -74,14 +98,14 @@ def get_customer(id):
 @bp.route("/<customerID>/update", methods=("GET", "POST"))
 @login_required
 def update(customerID):
-    customer = get_post(customerID)
+    customer = get_customer(customerID)
 
     if request.method == "POST":
         address = request.form["address"]
         error = None
 
         if not address:
-            error = "Message text is required."
+            error = "Address text is required."
 
         if error is not None:
             flash(error)
