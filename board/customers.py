@@ -13,32 +13,31 @@ from board.db import get_db
 bp = Blueprint("customers", __name__)
 
 
-@bp.route("/create", methods=("POST", "GET"))
+@bp.route("/customers/create", methods=("POST", "GET"))
 # Enforce login for creation of customers
 @login_required
 def create():
     if request.method == "POST":
         author = g.user["userID"]
-        CustomerName = request.form["CustomerName"]
-        ContactName = request.form["ContactName"]
-        Address = request.form["Addres"]
-        City = request.form["City"]
-        PostalCode = request.form["PostalCode"]
-        Country = request.form["Country"]
-        customerID = generate()
+        customername = request.form["customername"]
+        contactname = request.form["contactname"]
+        address = request.form["address"]
+        city = request.form["city"]
+        postalcode = request.form["postalcode"]
+        country = request.form["country"]
         error = None
 
-        if not CustomerName:
+        if not customername:
             error = "Customer Name is required"
-        if not ContactName:
+        if not contactname:
             error = "Contact Name is required"
-        if not Address:
+        if not address:
             error = "Address is required"
-        if not City:
+        if not city:
             error = "City is required"
-        if not PostalCode:
+        if not postalcode:
             error = "Postal Code is required"
-        if not Country:
+        if not country:
             error = "Country is required"
 
         if error is not None:
@@ -46,20 +45,20 @@ def create():
         else:
             db = get_db()
             db.execute(
-                "INSERT INTO Customers (CustomerID, CustomerName, ContactName, Address, City, PostalCode, Country, author) VALUES(?, ?, ?, ?, ?, ?, ?, ?)",
+                "INSERT INTO Customers ( CustomerName, ContactName, Address, City, PostalCode, Country, author) VALUES(?, ?, ?, ?, ?, ?, ?)",
                 (
-                    customerID,
-                    CustomerName,
-                    ContactName,
-                    Address,
-                    City,
-                    PostalCode,
-                    Country,
+                    customername,
+                    contactname,
+                    address,
+                    city,
+                    postalcode,
+                    country,
                     g.user["userID"],
                 ),
             )
             db.commit()
             return redirect(url_for("customers.customers"))
+        # make it redirect to the newly created Customer
     return render_template("customers/create.html")
 
 
@@ -67,7 +66,7 @@ def create():
 def customers():
     db = get_db()
     customers = db.execute(
-        "SELECT c.customerID, c.Customername,  c.address, c.city, c.PostalCode, c.country, c.created_at, c.author FROM customers c JOIN users u ON c.author = u.userID"
+        "SELECT c.customerID, c.Customername, c.address, c.city, c.PostalCode, c.country, c.created_at, c.author, username FROM customers c JOIN users u ON c.author = u.userID"
         " ORDER BY CustomerName ASC"
     ).fetchall()
     return render_template("customers/customers.html", customers=customers)
@@ -80,7 +79,7 @@ def get_customer(id):
     customer = (
         get_db()
         .execute(
-            "SELECT c.customerID, c.address, c.city, c.country, c.PostalCode, c.created_at, c.created_by FROM customers c JOIN users u ON c.author = u.userID WHERE c.customerID = ?",
+            "SELECT c.customerID, c.address, c.city, c.country, c.PostalCode, c.created_at, c.author, username FROM customers c JOIN users u ON c.author = u.userID WHERE c.customerID = ?",
             (id,),
         )
         .fetchone()

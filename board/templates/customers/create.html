@@ -1,0 +1,78 @@
+{% extends 'base.html' %} {% block header %}
+<h1>{% block title %} New Customer {% endblock %}</h1>
+{% endblock %} {% block content %}
+<form method="post">
+  <div class="form-group">
+    <label for="customername">Customer name:</label>
+    <input
+      type="text"
+      class="form-control"
+      name="customername"
+      id="customername"
+      value="{{ request.form['customername'] }}"
+      placeholder="Customer name"
+    />
+  </div>
+  <div class="form-group">
+    <label for="contactname">Contact name:</label>
+    <input
+      type="text"
+      class="form-control"
+      name="contactname"
+      id="contactname"
+      value="{{ request.form['contactname'] }}"
+      placeholder="Contact name"
+    />
+  </div>
+
+  <div class="form-group">
+    <label for="address">Address:</label>
+    <textarea
+      class="form-control"
+      name="address"
+      id="address"
+      value="{{ request.form['address'] }}"
+      required
+    >
+    {{ request.form['message'] }}</textarea
+    >
+  </div>
+  <div class="form-group">
+    <label for="city">City :</label>
+    <input
+      type="text"
+      class="form-control"
+      name="city"
+      id="city"
+      value="{{ request.form['city'] }}"
+      placeholder="City"
+    />
+  </div>
+  <div class="form-group">
+    <label for="postalcode">Post Code :</label>
+    <input
+      type="text"
+      class="form-control"
+      name="postalcode"
+      id="postalcode"
+      value="{{ request.form['postalcode'] }}"
+      placeholder="Post Code"
+    />
+  </div>
+  <div class="form-group">
+    <label for="country">Country :</label>
+    <input
+      type="text"
+      class="form-control"
+      name="country"
+      id="country"
+      value="{{ request.form['country'] }}"
+      placeholder="Country"
+    />
+  </div>
+
+  <div class="form-group">
+    <input type="submit" class="submit-btn" value="Create Customer" />
+  </div>
+</form>
+{% endblock %}

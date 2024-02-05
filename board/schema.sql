@@ -68,7 +68,7 @@ CREATE TABLE Categories
 
 CREATE TABLE Customers
 (      
-    CustomerID INTEGER PRIMARY KEY AUTOINCREMENT,
+    CustomerID TEXT PRIMARY KEY AUTOINCREMENT,
     CustomerName TEXT,
     ContactName TEXT,
     Address TEXT,

@@ -16,16 +16,17 @@
     />
   </div>
 </form> -->
+<a href="{{ url_for('customers.create') }}">Create a Customer</a>
 <section id="customers-results">
   {% for customer in customers %}
 
   <article id="customers-results">
-    <p class="message">{{ customer['CustomerName'] }}</p>
-    <p>{{ customer['Address'] }}</p>
-    <p>{{ customer['PostalCode'] }}</p>
-    <p>{{ customer['City'] }}</p>
-    <p>{{ customer['Country'] }}</p>
-    <small>{{ customer['author'] }}</small>
+    <p class="message">{{ customer['customername'] }}</p>
+    <p>{{ customer['address'] }}</p>
+    <p>{{ customer['postalcode'] }}</p>
+    <p>{{ customer['city'] }}</p>
+    <p>{{ customer['country'] }}</p>
+    <small>{{ customer['username'] }}</small>
     {% if g.user['userID'] == customer['author'] %}
     <a
       class="submit-btn"
