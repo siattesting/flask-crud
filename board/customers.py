@@ -8,7 +8,7 @@ from nanoid import generate
 # To Enforce login required on some view import the following from the auth blueprint
 from board.auth import login_required
 
-from board.db import get_db
+from board.db import get_db, query_db
 
 bp = Blueprint("customers", __name__)
 
@@ -45,7 +45,7 @@ def create():
         else:
             db = get_db()
             db.execute(
-                "INSERT INTO Customers ( CustomerName, ContactName, Address, City, PostalCode, Country, author) VALUES(?, ?, ?, ?, ?, ?, ?)",
+                "INSERT INTO Customers (CustomerName, ContactName, Address, City, PostalCode, Country, author) VALUES(?, ?, ?, ?, ?, ?, ?)",
                 (
                     customername,
                     contactname,
@@ -65,11 +65,19 @@ def create():
 @bp.route("/customers")
 def customers():
     db = get_db()
-    customers = db.execute(
-        "SELECT c.customerID, c.Customername, c.address, c.city, c.PostalCode, c.country, c.created_at, c.author, username FROM customers c JOIN users u ON c.author = u.userID"
-        " ORDER BY CustomerName ASC"
-    ).fetchall()
-    return render_template("customers/customers.html", customers=customers)
+    search = request.args.get("q")
+    if search is None:
+        # no search parameter, retrieve all customers
+        customers_set = db.execute(
+            "SELECT c.customerID, c.Customername, c.address, c.city, c.PostalCode, c.country, c.created_at, c.author, username FROM customers c JOIN users u ON c.author = u.userID"
+            " ORDER BY CustomerName ASC"
+        ).fetchall()
+    else:
+        customers_set = query_db(
+            "select * from Customers where CustomerName LIKE ?", search
+        )
+
+    return render_template("customers/customers.html", customers=customers_set)
 
 
 # Both the update and delete views will need to fetch a customer by id
@@ -94,7 +102,7 @@ def get_customer(id):
     return customer
 
 
-@bp.route("/<customerID>/update", methods=("GET", "POST"))
+@bp.route("/customers/<customerID>/update", methods=("GET", "POST"))
 @login_required
 def update(customerID):
     customer = get_customer(customerID)
@@ -120,10 +128,10 @@ def update(customerID):
     return render_template("customers/update.html", customer=customer)
 
 
-@bp.route("/<customerID>/delete", methods=("POST",))
+@bp.route("/customers/<customerID>/delete", methods=("POST",))
 @login_required
 def delete(customerID):
-    get_post(customerID)
+    get_customer(customerID)
     db = get_db()
     db.execute("DELETE FROM customers WHERE customerID = ?", (customerID,))
     db.commit()
@@ -144,7 +152,15 @@ def search_posts():
     ).fetchall()
 
     for customer in customers:
-        if search_term in customer["address"]:
+        if search_term in customer["CustomerName"]:
+            res_customers.append(customer)
+        if search_term in customer["ContactName"]:
+            res_customers.append(customer)
+        if search_term in customer["Address"]:
+            res_customers.append(customer)
+        if search_term in customer["City"]:
+            res_customers.append(customer)
+        if search_term in customer["Country"]:
             res_customers.append(customer)
 
     return render_template("customers/customers.html", customers=res_customers)
