@@ -138,7 +138,7 @@ def delete(customerID):
     return redirect(url_for("customers.customers"))
 
 
-@bp.route("/search", methods=["POST"])
+@bp.route("/customers/search", methods=["POST"])
 def search_posts():
     search_term = request.form.get("search")
 
