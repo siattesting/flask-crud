@@ -143,7 +143,7 @@ def search_posts():
     search_term = request.form.get("search")
 
     if not len(search_term):
-        return render_template("customers/customers.html", customers=[])
+        return render_template("customers/_customers_rows.html", customers=[])
 
     res_customers = []
     db = get_db()
@@ -154,13 +154,13 @@ def search_posts():
     for customer in customers:
         if search_term in customer["CustomerName"]:
             res_customers.append(customer)
-        if search_term in customer["ContactName"]:
+        elif search_term in customer["ContactName"]:
             res_customers.append(customer)
-        if search_term in customer["Address"]:
+        elif search_term in customer["Address"]:
             res_customers.append(customer)
-        if search_term in customer["City"]:
+        elif search_term in customer["City"]:
             res_customers.append(customer)
-        if search_term in customer["Country"]:
+        elif search_term in customer["Country"]:
             res_customers.append(customer)
 
-    return render_template("customers/customers.html", customers=res_customers)
+    return render_template("customers/_customersrows.html", customers=res_customers)

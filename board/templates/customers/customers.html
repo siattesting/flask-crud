@@ -8,8 +8,7 @@
       type="text"
       name="search"
       hx-post="/customers/search"
-      hx-trigger="keyup changed delay:5000ms"
-      hx-indicator="htmx-indicator"
+      hx-trigger="keyup changed delay:500ms"
       hx-target="#customers-results"
       placeholder="Search Customers"
       class="form-control"
@@ -18,26 +17,6 @@
 </form>
 <a href="{{ url_for('customers.create') }}">Create a Customer</a>
 <section id="customers-results">
-  {% for customer in customers %}
-
-  <article id="customers-results">
-    <p class="message">{{ customer['customername'] }}</p>
-    <p>{{ customer['address'] }}</p>
-    <p>{{ customer['postalcode'] }}</p>
-    <p>{{ customer['city'] }}</p>
-    <p>{{ customer['country'] }}</p>
-    <small>{{ customer['username'] }}</small>
-    {% if g.user['userID'] == customer['author'] %}
-    <a
-      class="submit-btn"
-      href="{{ url_for('customers.update', customerID=customer['customerID']) }}"
-      >Edit Message</a
-    >
-    {% endif %}
-    <aside></aside>
-  </article>
-  {% if not loop.last %}
-  <hr />
-  {% endif %} {% endfor %}
+  {% include "/customers/_customersrows.html" %}
 </section>
 {% endblock content %}
