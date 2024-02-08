@@ -17,6 +17,8 @@
 </form>
 <a href="{{ url_for('customers.create') }}">Create a Customer</a>
 <section id="customers-results">
-  {% include "/customers/_customersrows.html" %}
+  {% if request.args.get('viewmode') == 'list' %} {% include
+  "/customers/_customersrows.html" %} {% else %} {% include
+  "/customers/_customerstable.html" %} {% endif %}
 </section>
 {% endblock content %}

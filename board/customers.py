@@ -62,9 +62,31 @@ def create():
     return render_template("customers/create.html")
 
 
+# @bp.route("/customers")
+# def customers():
+#     db = get_db()
+#     viewmode = "list"
+#     search = request.args.get("q")
+#     if search is None:
+#         # no search parameter, retrieve all customers
+#         customers_set = db.execute(
+#             "SELECT c.customerID, c.Customername, c.address, c.city, c.PostalCode, c.country, c.created_at, c.author, username FROM customers c JOIN users u ON c.author = u.userID"
+#             " ORDER BY CustomerName ASC"
+#         ).fetchall()
+#     else:
+#         customers_set = query_db(
+#             "select * from Customers where CustomerName LIKE ?", search
+#         )
+
+#     return render_template(
+#         "customers/customers.html", customers=customers_set, viewmode=viewmode
+#     )
+
+
 @bp.route("/customers")
 def customers():
     db = get_db()
+    viewmode = "list"
     search = request.args.get("q")
     if search is None:
         # no search parameter, retrieve all customers
@@ -76,8 +98,14 @@ def customers():
         customers_set = query_db(
             "select * from Customers where CustomerName LIKE ?", search
         )
+    if viewmode is "list":
+        return render_template(
+            "customers/customers.html", customers=customers_set, viewmode="list"
+        )
 
-    return render_template("customers/customers.html", customers=customers_set)
+    return render_template(
+        "customers/customers.html", customers=customers_set, viewmode="table"
+    )
 
 
 # Both the update and delete views will need to fetch a customer by id
@@ -143,7 +171,7 @@ def search_posts():
     search_term = request.form.get("search")
 
     if not len(search_term):
-        return render_template("customers/_customers_rows.html", customers=[])
+        return render_template("customers/_customersrows.html", customers=[])
 
     res_customers = []
     db = get_db()
@@ -162,5 +190,7 @@ def search_posts():
             res_customers.append(customer)
         elif search_term in customer["Country"]:
             res_customers.append(customer)
+        else:
+            res_customers = customers
 
     return render_template("customers/_customersrows.html", customers=res_customers)
