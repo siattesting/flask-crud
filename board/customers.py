@@ -168,16 +168,16 @@ def delete(customerID):
 
 @bp.route("/customers/search", methods=["POST"])
 def search_posts():
-    search_term = request.form.get("search")
-
-    if not len(search_term):
-        return render_template("customers/_customersrows.html", customers=[])
-
-    res_customers = []
     db = get_db()
     customers = db.execute(
         "SELECT * FROM customers ORDER BY created_at DESC"
     ).fetchall()
+    search_term = request.form.get("search")
+
+    if not len(search_term):
+        return render_template("customers/_customersrows.html", customers=customers)
+
+    res_customers = []
 
     for customer in customers:
         if search_term in customer["CustomerName"]:
